@@ -1,0 +1,122 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+}
+
+html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  gap: 8px;
+  margin: 0;
+  padding: 8px;
+}
+
+button {
+  margin: 8px 0;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  width: 30rem;
+}
+
+.colors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#front,
+#back {
+  position: relative;
+  background-color: #006600;
+  aspect-ratio: 297/210;
+}
+
+#back {
+  display: none;
+}
+
+#back {
+  transform: scale(-1, 1);
+}
+
+#frontSilk,
+#backSilk {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+}
+
+#frontMask,
+#backMask {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+}
+
+#frontCopper,
+#backCopper {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+#frontEdgeCuts,
+#backEdgeCuts {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+}
+
+#frontDwgs,
+#backDwgs {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+#frontVias,
+#backVias {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+}

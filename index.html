@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KiCAD SVG Prettifier</title>
+  </head>
+  <body>
+    <div class="settings">
+      <h1>KiCAD SVG Prettifier</h1>
+      <label>
+        SVG file (from KiCAD):<br />
+        <input type="file" id="svgInput" />
+      </label>
+
+      <p>Choose Colors</p>
+
+      <div class="colors">
+        <label> Mask, No Cu: </label>
+        <input type="text" id="maskNoCu" value="#006600" />
+
+        <label> Mask, With Cu: </label>
+        <input type="text" id="maskWithCu" value="#008800" />
+
+        <label> Bare Cu: </label>
+        <input type="text" id="bareCu" value="#FF8800" />
+
+        <label> Silkscreen: </label>
+        <input type="text" id="silk" value="#FFFFFF" />
+
+        <label> Edge Cuts: </label>
+        <input type="text" id="cuts" value="#00FF00" />
+
+        <label> Frame: </label>
+        <input type="text" id="frame" value="#FFFFFF" />
+
+        <label> Vias: </label>
+        <input type="text" id="vias" value="#000000" />
+      </div>
+
+      <button id="makePretty">Make Pretty!</button>
+
+      <hr style="align-self: stretch; margin: 4px 0" />
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px">
+        <button id="showFront">Show Front</button>
+        <button id="showBack">Show Back</button>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div id="front">
+        <div id="frontMask"></div>
+        <div id="frontSilk"></div>
+        <div id="frontCopper"></div>
+        <div id="frontVias"></div>
+        <div id="frontEdgeCuts"></div>
+        <div id="frontDwgs"></div>
+      </div>
+
+      <div id="back">
+        <div id="backMask"></div>
+        <div id="backSilk"></div>
+        <div id="backCopper"></div>
+        <div id="backVias"></div>
+        <div id="backEdgeCuts"></div>
+        <div id="backDwgs"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
