@@ -67,7 +67,6 @@ button {
 #front,
 #back {
   position: relative;
-  background-color: #006600;
   aspect-ratio: 297/210;
 }
 
@@ -77,46 +76,4 @@ button {
 
 #back {
   transform: scale(-1, 1);
-}
-
-#frontSilk,
-#backSilk {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-}
-
-#frontMask,
-#backMask {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-}
-
-#frontCopper,
-#backCopper {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-}
-
-#frontEdgeCuts,
-#backEdgeCuts {
-  position: absolute;
-  inset: 0;
-  z-index: 60;
-}
-
-#frontDwgs,
-#backDwgs {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-}
-
-#frontVias,
-#backVias {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
 }

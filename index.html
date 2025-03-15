@@ -46,26 +46,30 @@
         <button id="showFront">Show Front</button>
         <button id="showBack">Show Back</button>
       </div>
+
+      <button id="export">Export</button>
     </div>
 
     <div class="cards">
-      <div id="front">
-        <div id="frontMask"></div>
-        <div id="frontSilk"></div>
-        <div id="frontCopper"></div>
-        <div id="frontVias"></div>
-        <div id="frontEdgeCuts"></div>
-        <div id="frontDwgs"></div>
-      </div>
+      <svg id="front" ns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" id="frontBg" style="fill: #cccccc" />
+        <g id="frontDwgs"></g>
+        <g id="frontCopper"></g>
+        <g id="frontMask"></g>
+        <g id="frontSilk"></g>
+        <g id="frontVias"></g>
+        <g id="frontEdgeCuts"></g>
+      </svg>
 
-      <div id="back">
-        <div id="backMask"></div>
-        <div id="backSilk"></div>
-        <div id="backCopper"></div>
-        <div id="backVias"></div>
-        <div id="backEdgeCuts"></div>
-        <div id="backDwgs"></div>
-      </div>
+      <svg id="back" ns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" id="backBg" style="fill: #cccccc" />
+        <g id="backDwgs"></g>
+        <g id="backCopper"></g>
+        <g id="backMask"></g>
+        <g id="backSilk"></g>
+        <g id="backVias"></g>
+        <g id="backEdgeCuts"></g>
+      </svg>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

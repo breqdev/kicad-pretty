@@ -4,9 +4,10 @@ const fileInput: HTMLInputElement = document.querySelector("#svgInput")!;
 const makePretty: HTMLButtonElement = document.querySelector("#makePretty")!;
 const showFront: HTMLButtonElement = document.querySelector("#showFront")!;
 const showBack: HTMLButtonElement = document.querySelector("#showBack")!;
+const exportBtn: HTMLButtonElement = document.querySelector("#export")!;
 
-const front: HTMLDivElement = document.querySelector("#front")!;
-const back: HTMLDivElement = document.querySelector("#back")!;
+const front: SVGSVGElement = document.querySelector("#front")!;
+const back: SVGSVGElement = document.querySelector("#back")!;
 
 const makeSVG = (children: NodeListOf<Element>) => {
   const root = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -90,8 +91,12 @@ makePretty.onclick = async () => {
     );
   });
 
-  front.style.backgroundColor = maskColorBase;
-  back.style.backgroundColor = maskColorBase;
+  document
+    .querySelector("#frontBg")!
+    .setAttribute("style", `fill: ${maskColorBase}`);
+  document
+    .querySelector("#backBg")!
+    .setAttribute("style", `fill: ${maskColorBase}`);
 
   document.querySelector("#frontMask")!.replaceChildren(makeSVG(frontMask));
   document.querySelector("#backSilk")!.replaceChildren(makeSVG(backSilk));
@@ -107,12 +112,40 @@ makePretty.onclick = async () => {
   document.querySelector("#backDwgs")!.replaceChildren(makeSVG(userDwgs));
 };
 
+let showing: "front" | "back" = "front";
+
 showFront.onclick = () => {
   front.style.display = "block";
   back.style.display = "none";
+  showing = "front";
 };
 
 showBack.onclick = () => {
   front.style.display = "none";
   back.style.display = "block";
+  showing = "back";
+};
+
+const downloadSvg = (svg: SVGSVGElement, filename: string) => {
+  var element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:text/plain;charset=utf-8," + encodeURIComponent(svg.outerHTML)
+  );
+  element.setAttribute("download", filename);
+
+  element.style.display = "none";
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+};
+
+exportBtn.onclick = () => {
+  if (showing === "front") {
+    downloadSvg(front, "front.svg");
+  } else {
+    downloadSvg(back, "back.svg");
+  }
 };
