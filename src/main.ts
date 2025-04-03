@@ -26,7 +26,10 @@ const replaceColor = (elements: NodeListOf<Element>, color: string) => {
     if (style.includes("fill-opacity:0.0") && style.includes("stroke:none")) {
       // no fill or stroke
       return style;
-    } else if (style.includes("fill-opacity:0.0")) {
+    } else if (
+      style.includes("fill-opacity:0.0") ||
+      style.includes("fill:none")
+    ) {
       // stroke, no fill
       return style + `;stroke:${color};stroke-opacity:1`;
     } else if (style.includes("stroke:none")) {
