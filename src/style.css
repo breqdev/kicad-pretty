@@ -72,7 +72,3 @@ button {
 #back {
   display: none;
 }
-
-#back {
-  transform: scale(-1, 1);
-}
