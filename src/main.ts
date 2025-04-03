@@ -9,9 +9,14 @@ const exportBtn: HTMLButtonElement = document.querySelector("#export")!;
 const front: SVGSVGElement = document.querySelector("#front")!;
 const back: SVGSVGElement = document.querySelector("#back")!;
 
-const makeSVG = (children: NodeListOf<Element>) => {
-  const root = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  root.setAttribute("viewBox", "0.0000 0.0000 297.0022 210.0072");
+// Keep track of the width and height
+// We don't set this on the DOM preview (so the SVG fits to size)
+// but we do want to include it in the export
+let width: string = "";
+let height: string = "";
+
+const makeGroup = (children: NodeListOf<Element>) => {
+  const root = document.createElementNS("http://www.w3.org/2000/svg", "g");
   children.forEach((c) => root.appendChild(c.cloneNode(true)));
   return root;
 };
@@ -42,6 +47,10 @@ makePretty.onclick = async () => {
   const parser = new DOMParser();
   const svgDocument = parser.parseFromString(svgData, "image/svg+xml");
   const svgRoot = svgDocument.documentElement;
+
+  const viewBox = svgRoot.getAttribute("viewBox") ?? "";
+  width = svgRoot.getAttribute("width") ?? "";
+  height = svgRoot.getAttribute("height") ?? "";
 
   const frontMask = svgRoot.querySelectorAll(`*[style*="fill:#D864FF"]`);
   const backSilk = svgRoot.querySelectorAll(`*[style*="fill:#E8B2A7"]`);
@@ -98,18 +107,25 @@ makePretty.onclick = async () => {
     .querySelector("#backBg")!
     .setAttribute("style", `fill: ${maskColorBase}`);
 
-  document.querySelector("#frontMask")!.replaceChildren(makeSVG(frontMask));
-  document.querySelector("#backSilk")!.replaceChildren(makeSVG(backSilk));
-  document.querySelector("#backMask")!.replaceChildren(makeSVG(backMask));
-  document.querySelector("#backCopper")!.replaceChildren(makeSVG(backCopper));
-  document.querySelector("#backVias")!.replaceChildren(makeSVG(vias));
-  document.querySelector("#frontSilk")!.replaceChildren(makeSVG(frontSilk));
-  document.querySelector("#frontEdgeCuts")!.replaceChildren(makeSVG(edgeCuts));
-  document.querySelector("#backEdgeCuts")!.replaceChildren(makeSVG(edgeCuts));
-  document.querySelector("#frontCopper")!.replaceChildren(makeSVG(frontCopper));
-  document.querySelector("#frontVias")!.replaceChildren(makeSVG(vias));
-  document.querySelector("#frontDwgs")!.replaceChildren(makeSVG(userDwgs));
-  document.querySelector("#backDwgs")!.replaceChildren(makeSVG(userDwgs));
+  document.querySelector("#front")?.setAttribute("viewBox", viewBox);
+  document.querySelector("#back")?.setAttribute("viewBox", viewBox);
+
+  document.querySelector("#frontMask")!.replaceChildren(makeGroup(frontMask));
+  document.querySelector("#backSilk")!.replaceChildren(makeGroup(backSilk));
+  document.querySelector("#backMask")!.replaceChildren(makeGroup(backMask));
+  document.querySelector("#backCopper")!.replaceChildren(makeGroup(backCopper));
+  document.querySelector("#backVias")!.replaceChildren(makeGroup(vias));
+  document.querySelector("#frontSilk")!.replaceChildren(makeGroup(frontSilk));
+  document
+    .querySelector("#frontEdgeCuts")!
+    .replaceChildren(makeGroup(edgeCuts));
+  document.querySelector("#backEdgeCuts")!.replaceChildren(makeGroup(edgeCuts));
+  document
+    .querySelector("#frontCopper")!
+    .replaceChildren(makeGroup(frontCopper));
+  document.querySelector("#frontVias")!.replaceChildren(makeGroup(vias));
+  document.querySelector("#frontDwgs")!.replaceChildren(makeGroup(userDwgs));
+  document.querySelector("#backDwgs")!.replaceChildren(makeGroup(userDwgs));
 };
 
 let showing: "front" | "back" = "front";
@@ -129,16 +145,30 @@ showBack.onclick = () => {
 const downloadSvg = (svg: SVGSVGElement, filename: string) => {
   const svgElement = svg.cloneNode(true) as SVGSVGElement;
   svgElement.removeAttribute("id");
-  svgElement.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
-  svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  svgElement.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-  svgElement.setAttribute("version", "1.1");
+  svgElement.setAttribute("width", width);
+  svgElement.setAttribute("height", height);
+
+  const clientrect = svg.getBBox();
+  const viewBox =
+    clientrect.x +
+    " " +
+    clientrect.y +
+    " " +
+    clientrect.width +
+    " " +
+    clientrect.height;
+  console.log(viewBox);
 
   const linkElement = document.createElement("a");
 
+  const prelude = `<?xml version="1.0" standalone="no"?>
+ <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+ `;
+
   linkElement.setAttribute(
     "href",
-    "data:text/plain;base64," + btoa(svgElement.outerHTML)
+    "data:text/plain;base64," + btoa(prelude + svgElement.outerHTML)
   );
   linkElement.setAttribute("download", filename);
 

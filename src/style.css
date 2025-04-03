@@ -67,7 +67,6 @@ button {
 #front,
 #back {
   position: relative;
-  aspect-ratio: 297/210;
 }
 
 #back {
