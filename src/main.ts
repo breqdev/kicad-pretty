@@ -49,6 +49,13 @@ const replaceColor = (elements: NodeListOf<Element>, color: string) => {
       const parentStyle = node.parentElement?.getAttribute("style");
       if (parentStyle) {
         node.setAttribute("style", getNewStyle(parentStyle));
+      } else {
+        // try just one more step up (sometimes happens on kicad 7)
+        const parentParentStyle =
+          node.parentElement?.parentElement?.getAttribute("style");
+        if (parentParentStyle) {
+          node.setAttribute("style", getNewStyle(parentParentStyle));
+        }
       }
       return;
     } else {
@@ -72,7 +79,8 @@ const getSelectorForColor = (color: string) => {
       .map(
         (e) => `${e}[style*="fill:#${color}"], ${e}[style*="stroke:#${color}"]`
       )
-      .join(", ") + `, g[style*="fill:#${color}"] > circle`
+      .join(", ") +
+    `, g[style*="fill:#${color}"] > circle:not([style*="fill:"]), g[style*="fill:#${color}"] > path:not([style*="fill:"]), g[style*="fill:#${color}"] > g.stroked-text > path, g[style*="fill:#${color}"] > g:not([style]) > circle:not([style*="fill:"])`
   );
 };
 
