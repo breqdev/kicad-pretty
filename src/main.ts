@@ -127,19 +127,27 @@ showBack.onclick = () => {
 };
 
 const downloadSvg = (svg: SVGSVGElement, filename: string) => {
-  var element = document.createElement("a");
-  element.setAttribute(
+  const svgElement = svg.cloneNode(true) as SVGSVGElement;
+  svgElement.removeAttribute("id");
+  svgElement.setAttribute("xmlns:svg", "http://www.w3.org/2000/svg");
+  svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  svgElement.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+  svgElement.setAttribute("version", "1.1");
+
+  const linkElement = document.createElement("a");
+
+  linkElement.setAttribute(
     "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(svg.outerHTML)
+    "data:text/plain;base64," + btoa(svgElement.outerHTML)
   );
-  element.setAttribute("download", filename);
+  linkElement.setAttribute("download", filename);
 
-  element.style.display = "none";
-  document.body.appendChild(element);
+  linkElement.style.display = "none";
+  document.body.appendChild(linkElement);
 
-  element.click();
+  linkElement.click();
 
-  document.body.removeChild(element);
+  document.body.removeChild(linkElement);
 };
 
 exportBtn.onclick = () => {
