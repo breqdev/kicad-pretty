@@ -22,20 +22,58 @@ const makeGroup = (children: NodeListOf<Element>) => {
 };
 
 const replaceColor = (elements: NodeListOf<Element>, color: string) => {
-  elements.forEach((node) => {
-    const style = node.getAttribute("style");
-
-    if (style?.includes("fill-opacity:0.0")) {
-      // stroke
-      node.setAttribute("style", style + `;stroke:${color};stroke-opacity:1`);
+  const getNewStyle = (style: string) => {
+    if (style.includes("fill-opacity:0.0") && style.includes("stroke:none")) {
+      // no fill or stroke
+      return style;
+    } else if (style.includes("fill-opacity:0.0")) {
+      // stroke, no fill
+      return style + `;stroke:${color};stroke-opacity:1`;
+    } else if (style.includes("stroke:none")) {
+      // fill, no stroke
+      return style + `;fill:${color};fill-opacity:1;`;
     } else {
-      // fill
-      node.setAttribute(
-        "style",
+      // fill and stroke
+      return (
         style + `;fill:${color};stroke:${color};fill-opacity:1;stroke-opacity:1`
       );
     }
+  };
+
+  elements.forEach((node) => {
+    const style = node.getAttribute("style");
+
+    if (style === null) {
+      // inherit...
+      // does its direct parent have a fill or stroke set? copy it
+      const parentStyle = node.parentElement?.getAttribute("style");
+      if (parentStyle) {
+        node.setAttribute("style", getNewStyle(parentStyle));
+      }
+      return;
+    } else {
+      node.setAttribute("style", getNewStyle(style));
+    }
   });
+};
+
+const getSelectorForColor = (color: string) => {
+  const elements = [
+    "path",
+    "rect",
+    "circle",
+    "text",
+    "g.stroked-text",
+    `g[style*="fill:none"]`,
+  ];
+
+  return (
+    elements
+      .map(
+        (e) => `${e}[style*="fill:#${color}"], ${e}[style*="stroke:#${color}"]`
+      )
+      .join(", ") + `, g[style*="fill:#${color}"] > circle`
+  );
 };
 
 makePretty.onclick = async () => {
@@ -52,15 +90,17 @@ makePretty.onclick = async () => {
   width = svgRoot.getAttribute("width") ?? "";
   height = svgRoot.getAttribute("height") ?? "";
 
-  const frontMask = svgRoot.querySelectorAll(`*[style*="fill:#D864FF"]`);
-  const backSilk = svgRoot.querySelectorAll(`*[style*="fill:#E8B2A7"]`);
-  const backMask = svgRoot.querySelectorAll(`*[style*="fill:#02FFEE"]`);
-  const backCopper = svgRoot.querySelectorAll(`*[style*="fill:#4D7FC4"]`);
-  const frontSilk = svgRoot.querySelectorAll(`*[style*="fill:#F2EDA1"]`);
-  const edgeCuts = svgRoot.querySelectorAll(`*[style*="fill:#D0D2CD"]`);
-  const frontCopper = svgRoot.querySelectorAll(`*[style*="fill:#C83434"]`);
+  const frontMask = svgRoot.querySelectorAll(getSelectorForColor("D864FF"));
+  const backSilk = svgRoot.querySelectorAll(getSelectorForColor("E8B2A7"));
+  const backMask = svgRoot.querySelectorAll(getSelectorForColor("02FFEE"));
+  const backCopper = svgRoot.querySelectorAll(getSelectorForColor("4D7FC4"));
+  const frontSilk = svgRoot.querySelectorAll(getSelectorForColor("F2EDA1"));
+  const edgeCuts = svgRoot.querySelectorAll(getSelectorForColor("D0D2CD"));
+  const frontCopper = svgRoot.querySelectorAll(getSelectorForColor("C83434"));
+
+  // old KiCAD uses black drawings, new KiCad uses this magenta color
   const userDwgs = svgRoot.querySelectorAll(
-    `*[style*="stroke:#000000"]:not(:has(*[style*="fill:"]))`
+    `*[style*="stroke:#000000"]:not(:has(*[style*="fill:"])), *[style*="stroke:#C872AB"]`
   );
   const vias = svgRoot.querySelectorAll(
     `*[style*="fill:#FFFFFF"]:not(:has(*[style*="fill:"]))`
