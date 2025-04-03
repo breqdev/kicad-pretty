@@ -72,3 +72,11 @@ button {
 #back {
   display: none;
 }
+
+p.code {
+  font-family: monospace;
+  background-color: #eeeeee;
+  padding: 2px 4px;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+}

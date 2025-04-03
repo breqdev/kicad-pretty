@@ -9,6 +9,15 @@
   <body>
     <div class="settings">
       <h1>KiCAD SVG Prettifier</h1>
+
+      <p style="margin-bottom: 0">Generate an SVG file with:</p>
+
+      <p class="code">
+        kicad-cli pcb export svg --mode-single --layers
+        F.Cu,B.Cu,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts
+        MyBoard.kicad_pcb
+      </p>
+
       <label>
         SVG file (from KiCAD):<br />
         <input type="file" id="svgInput" accept="image/svg+xml" />
